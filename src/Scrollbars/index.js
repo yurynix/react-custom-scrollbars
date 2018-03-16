@@ -507,6 +507,7 @@ export default class Scrollbars extends Component {
             autoHeightMin,
             autoHeightMax,
             style,
+            isRTL,
             children,
             ...props
         } = this.props;
@@ -527,7 +528,12 @@ export default class Scrollbars extends Component {
         const viewStyle = {
             ...viewStyleDefault,
             // Hide scrollbars by setting a negative margin
-            marginRight: scrollbarWidth ? -scrollbarWidth : 0,
+            ...(isRTL
+                // RTL scrollbar is on the left
+                ? { marginLeft: scrollbarWidth ? -scrollbarWidth : 0 }
+                //  LTR scrollbar is on the right
+                : { marginRight: scrollbarWidth ? -scrollbarWidth : 0 }
+            ),
             marginBottom: scrollbarWidth ? -scrollbarWidth : 0,
             ...(autoHeight && {
                 ...viewStyleAutoHeight,
@@ -584,7 +590,7 @@ export default class Scrollbars extends Component {
                 )
             ),
             cloneElement(
-                renderTrackVertical({ style: trackVerticalStyle }),
+                renderTrackVertical({ style: trackVerticalStyle, isRTL }),
                 { key: 'trackVertical', ref: (ref) => { this.trackVertical = ref; } },
                 cloneElement(
                     renderThumbVertical({ style: thumbVerticalStyleDefault }),
@@ -624,6 +630,7 @@ Scrollbars.propTypes = {
     ]),
     universal: PropTypes.bool,
     style: PropTypes.object,
+    isRTL: PropTypes.bool,
     children: PropTypes.node,
 };
 
@@ -643,4 +650,5 @@ Scrollbars.defaultProps = {
     autoHeightMin: 0,
     autoHeightMax: 200,
     universal: false,
+    isRTL: false,
 };
