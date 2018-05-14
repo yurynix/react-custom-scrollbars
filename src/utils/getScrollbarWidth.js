@@ -3,6 +3,12 @@ let scrollbarWidth = false;
 
 export default function getScrollbarWidth() {
     if (scrollbarWidth !== false) return scrollbarWidth;
+
+    // if document is not visible, our calculation will be wrong, skip cache and return 0 for now
+    if (document.body.clientWidth === 0 && document.body.clientHeight === 0) {
+       return 0;
+    }
+
     /* istanbul ignore else */
     if (typeof document !== 'undefined') {
         const div = document.createElement('div');
